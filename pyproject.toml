@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "swiss-ai-mcp-commons"
+version = "1.0.0"
+description = "Shared infrastructure and data models for Swiss AI MCPs"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Claude", email = "claude@anthropic.com"}
+]
+requires-python = ">=3.9"
+dependencies = [
+    "pydantic>=2.0,<3.0",
+    "httpx>=0.24.0,<1.0",
+    "structlog>=23.1.0,<24.0",
+    "python-dotenv>=1.0.0,<2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0,<8.0",
+    "pytest-asyncio>=0.21.0,<1.0",
+    "pytest-cov>=4.1.0,<5.0",
+    "mypy>=1.5.0,<2.0",
+    "black>=23.7.0,<24.0",
+    "ruff>=0.0.292,<1.0",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]  # Line length handled by black
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+check_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
