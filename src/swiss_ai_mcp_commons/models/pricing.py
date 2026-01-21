@@ -1,6 +1,6 @@
 """Pricing and fare data models for Swiss MCPs."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from decimal import Decimal
 
@@ -19,15 +19,15 @@ class Price(BaseModel):
             return self.formatted
         return f"{self.currency} {self.amount:.2f}"
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "amount": 125.50,
                 "currency": "CHF",
                 "formatted": "CHF 125.50"
             }
         }
+    )
 
 
 class FareOption(BaseModel):
@@ -57,9 +57,8 @@ class FareOption(BaseModel):
         description="Discount percentage for rail cards (0-100)"
     )
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "base_price": {
                     "amount": 89.00,
@@ -77,6 +76,7 @@ class FareOption(BaseModel):
                 "rail_card_discount": 25.0
             }
         }
+    )
 
 
 class PricingInfo(BaseModel):
@@ -110,9 +110,8 @@ class PricingInfo(BaseModel):
             return self.standard_price.amount - self.discounted_price.amount
         return None
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "standard_price": {
                     "amount": 125.00,
@@ -136,3 +135,4 @@ class PricingInfo(BaseModel):
                 ]
             }
         }
+    )

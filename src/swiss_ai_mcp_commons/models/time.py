@@ -1,6 +1,6 @@
 """Time-related data models for Swiss MCPs."""
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from datetime import datetime, date, time
 from typing import Optional
 
@@ -20,15 +20,15 @@ class TimeRange(BaseModel):
             raise ValueError('end_time must be after start_time')
         return v
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "start_time": "09:00:00",
                 "end_time": "17:30:00",
                 "duration_minutes": 510
             }
         }
+    )
 
 
 class DateRange(BaseModel):
@@ -67,12 +67,12 @@ class DateRange(BaseModel):
         today = date.today()
         return self.start_date <= today <= self.end_date
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "start_date": "2024-07-15",
                 "end_date": "2024-07-22",
                 "duration_days": 8
             }
         }
+    )

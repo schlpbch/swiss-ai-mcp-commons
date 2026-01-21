@@ -1,6 +1,6 @@
 """Location and coordinate models for Swiss MCPs."""
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from typing import Optional
 
 
@@ -34,15 +34,15 @@ class Coordinates(BaseModel):
         # Allow broader region for neighboring countries
         return v
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "latitude": 46.947,
                 "longitude": 7.447,
                 "altitude_m": 541
             }
         }
+    )
 
 
 class Region(BaseModel):
@@ -74,15 +74,15 @@ class Region(BaseModel):
             raise ValueError(f"Invalid canton code: {v}. Must be one of {valid_cantons}")
         return v.upper()
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "canton": "BE",
                 "district": "Bern-Mittelland",
                 "municipality": "Bern"
             }
         }
+    )
 
 
 class Location(BaseModel):
@@ -107,9 +107,8 @@ class Location(BaseModel):
         """Validate country code."""
         return v.upper()
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "name": "Bern",
                 "coordinates": {
@@ -130,3 +129,4 @@ class Location(BaseModel):
                 "timezone": "Europe/Zurich"
             }
         }
+    )

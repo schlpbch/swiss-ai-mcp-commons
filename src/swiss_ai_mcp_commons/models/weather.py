@@ -1,6 +1,6 @@
 """Weather-related data models for Swiss MCPs."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
 
@@ -14,9 +14,8 @@ class Temperature(BaseModel):
     apparent: Optional[float] = Field(default=None, description="Apparent/feels-like temperature")
     dew_point: Optional[float] = Field(default=None, description="Dew point in Celsius")
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "value": 15.2,
                 "min": 8.5,
@@ -25,6 +24,7 @@ class Temperature(BaseModel):
                 "dew_point": 10.2
             }
         }
+    )
 
 
 class SnowConditions(BaseModel):
@@ -49,9 +49,8 @@ class SnowConditions(BaseModel):
         description="Snow quality: excellent, good, fair, poor, variable"
     )
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "depth_cm": 180,
                 "fresh_cm": 25,
@@ -61,6 +60,7 @@ class SnowConditions(BaseModel):
                 "quality": "excellent"
             }
         }
+    )
 
 
 class AirQuality(BaseModel):
@@ -81,9 +81,8 @@ class AirQuality(BaseModel):
     pollen_graminea: Optional[int] = Field(default=None, ge=0, description="Graminea pollen (0-5)")
     pollen_mugwort: Optional[int] = Field(default=None, ge=0, description="Mugwort pollen (0-5)")
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "aqi": 42.0,
                 "level": "Good",
@@ -98,6 +97,7 @@ class AirQuality(BaseModel):
                 "pollen_mugwort": 0
             }
         }
+    )
 
 
 class Weather(BaseModel):
@@ -132,9 +132,8 @@ class Weather(BaseModel):
     snow_conditions: Optional[SnowConditions] = Field(default=None, description="Snow data if alpine")
     air_quality: Optional[AirQuality] = Field(default=None, description="Air quality data")
 
-    class Config:
-        """Pydantic config."""
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "timestamp": "2024-01-20T14:00:00Z",
                 "description": "Sunny",
@@ -153,3 +152,4 @@ class Weather(BaseModel):
                 "cloud_cover_percent": 20
             }
         }
+    )
