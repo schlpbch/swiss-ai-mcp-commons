@@ -29,6 +29,10 @@ class Price(BaseModel):
         }
     )
 
+    def __str__(self) -> str:
+        """String representation of price."""
+        return self.display
+
 
 class FareOption(BaseModel):
     """Single fare option with class and restrictions."""
@@ -77,6 +81,11 @@ class FareOption(BaseModel):
             }
         }
     )
+
+    def __str__(self) -> str:
+        """String representation of fare option."""
+        refund_str = "refundable" if self.refundable else "non-refundable"
+        return f"FareOption({self.fare_class}, {self.total_price.display}, {refund_str})"
 
 
 class PricingInfo(BaseModel):
@@ -136,3 +145,10 @@ class PricingInfo(BaseModel):
             }
         }
     )
+
+    def __str__(self) -> str:
+        """String representation of pricing info."""
+        best = self.best_price
+        if self.discounted_price:
+            return f"PricingInfo({best.display}, {self.savings_percent:.0f}% off from {self.standard_price.display})"
+        return f"PricingInfo({best.display})"

@@ -30,6 +30,13 @@ class TimeRange(BaseModel):
         }
     )
 
+    def __str__(self) -> str:
+        """String representation of time range."""
+        hours = self.duration_minutes // 60 if self.duration_minutes else 0
+        mins = self.duration_minutes % 60 if self.duration_minutes else 0
+        duration_str = f", {hours}h{mins}m" if self.duration_minutes else ""
+        return f"TimeRange({self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')}{duration_str})"
+
 
 class DateRange(BaseModel):
     """Date range for trip planning."""
@@ -76,3 +83,9 @@ class DateRange(BaseModel):
             }
         }
     )
+
+    def __str__(self) -> str:
+        """String representation of date range."""
+        days = self.days
+        status = "past" if self.is_past else "current" if self.is_current else "future"
+        return f"DateRange({self.start_date} to {self.end_date}, {days} days, {status})"

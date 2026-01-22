@@ -248,3 +248,19 @@ class CachedHttpClient:
         cache_size = len(self._cache)
         self._cache.clear()
         logger.info("cache_cleared", items=cache_size)
+
+    def __str__(self) -> str:
+        """String representation of HTTP client."""
+        cache_size = len(self._cache)
+        return f"CachedHttpClient(base_url={self.base_url}, cache_entries={cache_size})"
+
+    def __repr__(self) -> str:
+        """Repr representation of HTTP client."""
+        return (
+            f"CachedHttpClient("
+            f"base_url={self.base_url!r}, "
+            f"cache_ttl={self.cache_ttl_seconds}s, "
+            f"max_retries={self.max_retries}, "
+            f"timeout={self.timeout_seconds}s"
+            f")"
+        )

@@ -26,6 +26,12 @@ class Temperature(BaseModel):
         }
     )
 
+    def __str__(self) -> str:
+        """String representation of temperature."""
+        if self.min is not None and self.max is not None:
+            return f"Temperature({self.value}°C, min={self.min}°C, max={self.max}°C)"
+        return f"Temperature({self.value}°C)"
+
 
 class SnowConditions(BaseModel):
     """Snow depth and conditions for mountain regions."""
@@ -61,6 +67,15 @@ class SnowConditions(BaseModel):
             }
         }
     )
+
+    def __str__(self) -> str:
+        """String representation of snow conditions."""
+        parts = [f"{self.depth_cm}cm"]
+        if self.fresh_cm is not None and self.fresh_cm > 0:
+            parts.append(f"fresh: {self.fresh_cm}cm")
+        if self.quality:
+            parts.append(self.quality)
+        return f"SnowConditions({', '.join(parts)})"
 
 
 class AirQuality(BaseModel):
@@ -98,6 +113,10 @@ class AirQuality(BaseModel):
             }
         }
     )
+
+    def __str__(self) -> str:
+        """String representation of air quality."""
+        return f"AirQuality(AQI={self.aqi:.0f}, level={self.level})"
 
 
 class Weather(BaseModel):
@@ -153,3 +172,9 @@ class Weather(BaseModel):
             }
         }
     )
+
+    def __str__(self) -> str:
+        """String representation of weather."""
+        temp_str = f"{self.temperature.value}°C"
+        wind_str = f", wind={self.wind_speed_kmh}km/h" if self.wind_speed_kmh else ""
+        return f"Weather({self.description}, {temp_str}{wind_str})"

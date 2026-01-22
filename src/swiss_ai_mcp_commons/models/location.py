@@ -44,6 +44,12 @@ class Coordinates(BaseModel):
         }
     )
 
+    def __str__(self) -> str:
+        """String representation of coordinates."""
+        if self.altitude_m is not None:
+            return f"Coordinates({self.latitude:.4f}°N, {self.longitude:.4f}°E, {self.altitude_m}m)"
+        return f"Coordinates({self.latitude:.4f}°N, {self.longitude:.4f}°E)"
+
 
 class Region(BaseModel):
     """Swiss region or administrative division."""
@@ -83,6 +89,15 @@ class Region(BaseModel):
             }
         }
     )
+
+    def __str__(self) -> str:
+        """String representation of region."""
+        parts = [self.canton]
+        if self.district:
+            parts.append(self.district)
+        if self.municipality:
+            parts.append(self.municipality)
+        return f"Region({', '.join(parts)})"
 
 
 class Location(BaseModel):
@@ -130,3 +145,9 @@ class Location(BaseModel):
             }
         }
     )
+
+    def __str__(self) -> str:
+        """String representation of location."""
+        region_str = f", {self.region.canton}" if self.region else ""
+        coords_str = f"{self.coordinates.latitude:.4f}°N, {self.coordinates.longitude:.4f}°E"
+        return f"Location({self.name}{region_str}, {coords_str})"
