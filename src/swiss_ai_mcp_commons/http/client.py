@@ -2,6 +2,7 @@
 
 import httpx
 import asyncio
+import json
 from typing import Any, Dict, Optional
 from datetime import datetime, timedelta
 from hashlib import md5
@@ -264,3 +265,24 @@ class CachedHttpClient:
             f"timeout={self.timeout_seconds}s"
             f")"
         )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert client state to dictionary for JSON serialization."""
+        return {
+            "base_url": self.base_url,
+            "cache_ttl_seconds": self.cache_ttl_seconds,
+            "max_retries": self.max_retries,
+            "timeout_seconds": self.timeout_seconds,
+            "cache_size": len(self._cache),
+        }
+
+    def to_json(self, **kwargs) -> str:
+        """Convert client state to compact JSON string.
+
+        Args:
+            **kwargs: Additional arguments for json.dumps (e.g., indent=2 for pretty print)
+
+        Returns:
+            JSON string representation of client state
+        """
+        return json.dumps(self.to_dict(), **kwargs)
