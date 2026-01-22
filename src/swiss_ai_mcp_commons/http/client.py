@@ -2,18 +2,17 @@
 
 import httpx
 import asyncio
-import json
-import gzip
-import base64
 from typing import Any, Dict, Optional
 from datetime import datetime, timedelta
 from hashlib import md5
 import structlog
 
+from swiss_ai_mcp_commons.serialization import JsonSerializableMixin
+
 logger = structlog.get_logger(__name__)
 
 
-class CachedHttpClient:
+class CachedHttpClient(JsonSerializableMixin):
     """HTTP client with caching and retry logic for API calls."""
 
     def __init__(
@@ -277,35 +276,3 @@ class CachedHttpClient:
             "timeout_seconds": self.timeout_seconds,
             "cache_size": len(self._cache),
         }
-
-    def to_json(self, compress: bool = False, **kwargs) -> str:
-        """Convert client state to compact JSON string with optional gzip compression.
-
-        Args:
-            compress: If True, gzip compress and base64 encode the JSON
-            **kwargs: Additional arguments for json.dumps (e.g., indent=2 for pretty print)
-
-        Returns:
-            JSON string representation of client state, optionally gzip compressed and base64 encoded
-        """
-        json_str = json.dumps(self.to_dict(), **kwargs)
-        if compress:
-            compressed = gzip.compress(json_str.encode('utf-8'))
-            return base64.b64encode(compressed).decode('ascii')
-        return json_str
-
-    def to_json_gzipped(self, as_base64: bool = True, **kwargs) -> str | bytes:
-        """Convert client state to gzip-compressed JSON.
-
-        Args:
-            as_base64: If True, return base64-encoded string; if False, return raw bytes
-            **kwargs: Additional arguments for json.dumps (e.g., indent=2 for pretty print)
-
-        Returns:
-            Gzip-compressed JSON as base64 string or raw bytes
-        """
-        json_str = json.dumps(self.to_dict(), **kwargs)
-        compressed = gzip.compress(json_str.encode('utf-8'))
-        if as_base64:
-            return base64.b64encode(compressed).decode('ascii')
-        return compressed
